@@ -23,50 +23,68 @@ README.md
 small-api/
     main.py
     config/
-        sql_connection.py
+        sql_connection.py # for now empty
     tools/
-        sql_queries.py
+        sql_queries.py #for now empty
 ```
-- Make sure you also have a `.env`
-- From your terminal, run: `python main.py`
+
+- From your terminal, run `python main.py`
 - In that terminal, you'll get feedback of your prints and the errors.
 - After the server is up and running you'll be able to go into your browser and access the endpoints you defined.
 
 ### Iteration 2
 
-You now have an API that runs queries based on parameters. Now, we will seed a database. We do this through POST methods.
+Now, we are going to work with data: we'll establish a connection to the database.
 
-Post methods can only be done through python. Open a jupyter notebook and have two cells: one for importing requests and another one to do the requests.post:
-
-```python
-requests.post("http://127.0.0.1:9000/insert-into-employees", params = params)
-```
-
-1. Create a route with the endpoint: `"/insert-into-employees"`
-2. Define a function in `tools/sql_queries.py` that that will receive as arguments whatever you want to insert.
-3. Call that function under another one below your route.
-4. From python, create a dictionary named params where each key you're passing is the name of the column and each value will be your inserted value. Then:
-
-```python
-requests.post("http://127.0.0.1:9000/insert-into-employees", params = params)
-```
+1. Go to your `config/sql_connection.py` file.
+2. Establish a connection to MySQL.
+   - Import the necessary libraries (SQL alchemy)
+   - Use `python-dotenv` & `.env` to load your password.
+   - Remember to include your `.env` file in your `.gitignore`.
+   - Define the database you want to connect to (let's go with employees)
+   - Define an engine :)
 
 ### Iteration 3
 
-Create and parametrize as many endpoints as you find useful. Is there some aggregations you can do?
+Now, we want to make sure we can use the engine we defined.
+
+- 1. Go to `tools/sql_queries.py` and import the engine.
+- 2. Import the necessary libraries
+- 3. Define a function that:
+  - is called `get_everything()`
+  - takes no arguments
+  - selects everything from the table salaries with a limit of 10 and saves it into a df
+  - returns the [df as a dict](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.to_dict.html) (mind orient argument).
 
 ### Iteration 4
 
-1. Choose a database: a csv of your liking
-2. Upload that database to [free sql database](https://www.freesqldatabase.com/)
-3. Establish a connection to your database through Workbench to your db on the cloud
-4. You can now upload your table, either manually or through python. If manually doesn't work, do it through python
-6. To do it through python, you will need mysql alchemy and a connection string: `f"mysql+pymysql://{user}:{password}@sql7.freesqldatabase.com/{name}"`
+Now, we'll make that function available on the main file.
+
+1. Go to `main.py`
+2. Import your sql_queries as sql
+3. Create a route with the name `"/everything-employees"`
+4. Under that route, define a function with the name `example`
+5. The function `example` should defined on iteration 3: `sql.get_everything()`
+6. Make sure you jsonify the return of that function
+7. Check it works: go to your browser, go to the `"/everything-employees"` endpoint and see if you get the result: you should get a stringified version of a dictionary of 10 elements.
+
+### Iteration 5
+
+Now we'll create an endpoint that has parameters. Create a query that selects 10 elements for any given table.
+
+1. On your `tools/sql_queries.py` define a function that takes one argument. That function should run a query that selects 10 elements from any table in your database. Call it `table_ten()`
+2. On your `main.py`
+3. Create an route: `table/<one_table>`
+4. Under that route, create a function that returns a stringified version of calling table_ten(one_table).
 
 ### BONUS
 
-Deploy your API to [heroku](https://devcenter.heroku.com/articles/git). This will allow you to have your API up and running on a remote address.
+Repeat the same process to connect to mongo.
 
 ## Submission
 
 Upon completion, add your deliverables to git. Then commit git and push your branch to the remote.
+
+## Resources
+
+[]()
