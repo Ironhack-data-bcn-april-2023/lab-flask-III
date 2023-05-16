@@ -27,5 +27,6 @@ def insert_data(dict_):
     query = f"INSERT INTO employees VALUES ('{emp_no}', '{birth_date}', '{first_name}', '{last_name}', '{gender}', '{hire_date}');"
     engine = conn.connection_to_sql()
     engine.execute(query)
+    
     return "Inserted!"
     
